@@ -18,24 +18,12 @@ ORDER BY id
 LIMIT $1 
 OFFSET $2;
 
--- name: UpdateAccount :exec
+-- name: UpdateAccount :one
 UPDATE accounts
 SET balance = $2
-WHERE id = $1;
+WHERE id = $1
+RETURNING id, owner, balance, currency, created_at;
 
 -- name: DeleteAccount :exec
 DELETE FROM accounts
 WHERE id = $1;
-
--- name: GetTransfer :one
-SELECT * FROM transfers
-WHERE id = $1 LIMIT 1;
-
--- name: ListTransfers :many
-SELECT * FROM transfers
-WHERE 
-    from_account_id = $1 OR
-    to_account_id = $2
-ORDER BY id
-LIMIT $3
-OFFSET $4;
